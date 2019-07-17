@@ -226,6 +226,11 @@ namespace UnityEngine
 
         public virtual bool RuleMatch(int neighbor, TileBase tile)
         {
+            if (tile is RuleOverrideTile)
+                tile = (tile as RuleOverrideTile).runtimeTile.m_Self;
+            else if (tile is RuleTile)
+                tile = (tile as RuleTile).m_Self;
+
             switch (neighbor)
             {
                 case TilingRule.Neighbor.This: return tile == m_Self;
@@ -240,8 +245,6 @@ namespace UnityEngine
             {
                 int index = GetRotatedIndex(i, angle);
                 TileBase tile = neighboringTiles[index];
-                if (tile is RuleOverrideTile)
-                    tile = (tile as RuleOverrideTile).m_RuntimeTile.m_Self;
                 if (!RuleMatch(rule.m_Neighbors[i], tile))
                 {
                     return false;
@@ -256,8 +259,6 @@ namespace UnityEngine
             {
                 int index = GetMirroredIndex(i, mirrorX, mirrorY);
                 TileBase tile = neighboringTiles[index];
-                if (tile is RuleOverrideTile)
-                    tile = (tile as RuleOverrideTile).m_RuntimeTile.m_Self;
                 if (!RuleMatch(rule.m_Neighbors[i], tile))
                 {
                     return false;
